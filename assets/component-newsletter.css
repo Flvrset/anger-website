@@ -45,10 +45,16 @@
 .newsletter-form__button {
   width: 4.4rem;
   margin: 0;
-  right: var(--inputs-border-width);
-  top: 0;
-  height: 100%;
-  z-index: 2;
+  color: #e7e6e6;
+  background-color: #171717;
+  border: none;
+  padding: 0 2rem;
+  word-wrap: normal;
+  box-sizing: content-box;
+  font-family: 'Consola', sans-serif;
+  letter-spacing: 0.1rem;
+  font-size: 1.2rem;
+  transition: all 0.2s ease-in-out;
 }
 
 .newsletter-form__button:focus-visible {
@@ -56,14 +62,8 @@
   background-color: rgb(var(--color-background));
 }
 
-.newsletter-form__button:focus {
-  box-shadow: 0 0 0 0.3rem rgb(var(--color-background)), 0 0 0 0.4rem rgba(var(--color-foreground));
-  background-color: rgb(var(--color-background));
-}
-
-.newsletter-form__button:not(:focus-visible):not(.focused) {
-  box-shadow: inherit;
-  background-color: inherit;
+.newsletter-form__button:hover {
+  background-color: black;
 }
 
 .newsletter-form__button .icon {

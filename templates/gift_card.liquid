@@ -33,6 +33,14 @@
     %}
 
     {% style %}
+      @font-face {
+        font-family: 'Consola';
+        font-style: normal;
+        font-weight: normal;
+        font-display: swap;
+        src: url('https://cdn.shopify.com/s/files/1/0980/4988/4424/files/consola.woff2?v=1754486741') format('woff2');
+      }
+
       {{ settings.type_body_font | font_face: font_display: 'swap' }}
       {{ body_font_bold | font_face: font_display: 'swap' }}
       {{ body_font_italic | font_face: font_display: 'swap' }}
@@ -40,7 +48,7 @@
       {{ settings.type_header_font | font_face: font_display: 'swap' }}
 
       :root {
-        --font-body-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+        --font-body-family: 'Consola', {{ settings.type_body_font.fallback_families }};
         --font-body-style: {{ settings.type_body_font.style }};
         --font-body-weight: {{ settings.type_body_font.weight }};
 

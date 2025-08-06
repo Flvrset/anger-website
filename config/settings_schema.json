@@ -101,6 +101,17 @@
       }
     ]
   },
+    {
+    "name": "Password page",
+    "settings": [
+      {
+        "type": "video",
+        "id": "password_video_url",
+        "label": "Background video",
+        "info": "Video to play in the background of the password page. The video will be muted and looped."
+      }
+    ]
+  },
   {
     "name": "t:settings_schema.typography.name",
     "settings": [

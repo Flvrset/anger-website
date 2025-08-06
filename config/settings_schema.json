@@ -16,6 +16,11 @@
         "label": "t:settings_schema.logo.settings.logo_image.label"
       },
       {
+        "type": "image_picker",
+        "id": "logo_white",
+        "label": "t:settings_schema.logo.settings.logo_white_image.label"
+      },
+      {
         "type": "range",
         "id": "logo_width",
         "min": 50,
@@ -98,17 +103,6 @@
           "on_secondary_button": "secondary_button_label",
           "secondary_button_border": "secondary_button_label"
         }
-      }
-    ]
-  },
-    {
-    "name": "Password page",
-    "settings": [
-      {
-        "type": "video",
-        "id": "password_video",
-        "label": "Background video",
-        "info": "Video to play in the background of the password page. The video will be muted and looped."
       }
     ]
   },

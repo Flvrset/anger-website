@@ -106,7 +106,7 @@
     "settings": [
       {
         "type": "video",
-        "id": "password_video_url",
+        "id": "password_video",
         "label": "Background video",
         "info": "Video to play in the background of the password page. The video will be muted and looped."
       }

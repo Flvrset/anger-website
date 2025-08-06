@@ -2030,6 +2030,7 @@ input[type='checkbox'] {
 
 .modal__toggle-open {
   display: flex;
+  justify-content: center;
 }
 
 .modal__close-button.link {

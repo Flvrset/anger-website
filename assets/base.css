@@ -2031,6 +2031,7 @@ input[type='checkbox'] {
 .modal__toggle-open {
   display: flex;
   justify-content: center;
+  opacity: 0.8;
 }
 
 .modal__close-button.link {

@@ -550,6 +550,9 @@ hr {
   color: currentColor;
   display: block;
 }
+.card-link {
+  text-align: center;
+}
 
 .placeholder {
   background-color: rgba(var(--color-foreground), 0.04);
@@ -1155,10 +1158,6 @@ summary::-webkit-details-marker {
 .media--circle {
   padding-bottom: 100%;
   border-radius: 50%;
-}
-
-.media.media--hover-effect > img + img {
-  opacity: 0;
 }
 
 @media screen and (min-width: 990px) {

@@ -2325,6 +2325,10 @@ input[type='checkbox'] {
   z-index: 3;
 }
 
+.shopify-section-group-footer-group {
+  position: relative;
+}
+
 .shopify-section-header-sticky {
   position: sticky;
   top: 0;

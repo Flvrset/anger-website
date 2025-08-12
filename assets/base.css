@@ -2326,7 +2326,8 @@ input[type='checkbox'] {
 }
 
 .shopify-section-group-footer-group {
-  position: relative;
+  display: flex;
+  justify-content: center;
 }
 
 .shopify-section-header-sticky {

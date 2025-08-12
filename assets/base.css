@@ -552,6 +552,16 @@ hr {
 }
 .card-link {
   text-align: center;
+  text-transform: uppercase;
+  font-size: 2.75rem;
+  font-weight: 800;
+  opacity: 1 !important
+}
+
+.card__type {
+  text-align: center;
+  font-weight: 500;
+  margin-top: -5px;
 }
 
 .placeholder {

@@ -173,7 +173,9 @@
                   src="{{ card_product.featured_media | image_url: width: 533 }}"
                   alt="{{ card_product.featured_media.alt | escape }}"
                   class="motion-reduce"
-                  {% unless lazy_load == false %}loading="lazy"{% endunless %}
+                  {% unless lazy_load == false %}
+                    loading="lazy"
+                  {% endunless %}
                   width="{{ card_product.featured_media.width }}"
                   height="{{ card_product.featured_media.height }}"
                 >
@@ -235,6 +237,7 @@
             >
               {{ card_product.title | escape }}
             </a>
+            <span class="card__type">{{ card_product.type | escape }}</span>
           </h3>
           <div class="card-information">
             {%- if show_vendor -%}

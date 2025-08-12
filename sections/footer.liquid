@@ -8,6 +8,10 @@
 {%- style -%}
   .footer {
     margin-top: {{ section.settings.margin_top | times: 0.75 | round: 0 }}px;
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   .section-{{ section.id }}-padding {
@@ -317,7 +321,7 @@
     <div class="footer__content-links">
       <a href="{{ routes.root_url }}pages/contact">Contact</a>
       <a href="{% if shop.privacy_policy != blank %}{{ shop.privacy_policy.url }}{% else %}{{ routes.root_url }}policies/privacy-policy{% endif %}">Privacy Policy</a>
-      <a href="{% if shop.terms_of_service != blank %}{{ shop.terms_of_service.url }}{% else %}{{ routes.root_url }}policies/terms-of-service{% endif %}">Terms</a>
+      <a href="{{ routes.root_url }}pages/terms">Terms</a>
       <a href="{{ routes.root_url }}pages/faq">FAQ</a>
     </div>
     <div class="footer__content-bottom-wrapper page-width{% if section.settings.enable_country_selector == false and section.settings.enable_language_selector == false %} footer__content-bottom-wrapper--center{% endif %}">

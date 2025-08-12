@@ -25,6 +25,23 @@
       padding-bottom: {{ section.settings.padding_bottom }}px;
     }
   }
+
+  .footer__content-links {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+    text-transform: uppercase;
+    gap: 70px;
+    a {
+      text-decoration: none;
+      color: black;
+      opacity: 1 !important;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
 {%- endstyle -%}
 
 <footer class="footer section-{{ section.id }}-padding">
@@ -297,24 +314,17 @@
         {%- endif -%}
       </div>
     </div>
+    <div class="footer__content-links">
+      <a href="{{ routes.root_url }}pages/contact">Contact</a>
+      <a href="{% if shop.privacy_policy != blank %}{{ shop.privacy_policy.url }}{% else %}{{ routes.root_url }}policies/privacy-policy{% endif %}">Privacy Policy</a>
+      <a href="{% if shop.terms_of_service != blank %}{{ shop.terms_of_service.url }}{% else %}{{ routes.root_url }}policies/terms-of-service{% endif %}">Terms</a>
+      <a href="{{ routes.root_url }}pages/faq">FAQ</a>
+    </div>
     <div class="footer__content-bottom-wrapper page-width{% if section.settings.enable_country_selector == false and section.settings.enable_language_selector == false %} footer__content-bottom-wrapper--center{% endif %}">
       <div class="footer__copyright caption">
         <small class="copyright__content"
           >&copy; {{ 'now' | date: '%Y' }}, {{ shop.name | link_to: routes.root_url -}}
         </small>
-        {%- if section.settings.show_policy -%}
-          <ul class="policies list-unstyled">
-            {%- for policy in shop.policies -%}
-              {%- if policy != blank -%}
-                <li>
-                  <small class="copyright__content"
-                    ><a href="{{ policy.url }}">{{ policy.title | escape }}</a></small
-                  >
-                </li>
-              {%- endif -%}
-            {%- endfor -%}
-          </ul>
-        {%- endif -%}
       </div>
     </div>
   </div>

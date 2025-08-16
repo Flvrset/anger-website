@@ -1594,6 +1594,7 @@ media-gallery .slider-mobile-gutter .slider-counter__link--active .dot {
     cursor: pointer;
     text-wrap: nowrap;
     flex: 0;
+    color: black;
   }
 }
 

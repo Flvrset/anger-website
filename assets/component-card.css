@@ -93,13 +93,6 @@
   text-align: var(--text-alignment);
 }
 
-.card__media,
-.card .media {
-  bottom: 0;
-  position: absolute;
-  top: 0;
-}
-
 .card .media {
   width: 100%;
 }
@@ -117,17 +110,17 @@
   width: 100%;
 }
 
-.card--media .card__inner .card__content {
-  position: relative;
-  padding: calc(var(--image-padding) + 1rem);
-}
-
 .card__content {
   display: grid;
   grid-template-rows: minmax(0, 1fr) max-content minmax(0, 1fr);
   padding: 1rem;
   width: 100%;
   flex-grow: 1;
+}
+
+.card__content.sold-out {
+  position: absolute;
+  bottom: 0;
 }
 
 .card__content--auto-margins {

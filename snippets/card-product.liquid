@@ -55,13 +55,11 @@
             {%- liquid
               assign webp_meta = card_product.metafields.custom.webp_video_link
               assign hevc_meta = card_product.metafields.custom.hevc_video_link
-              assign mp4_meta  = card_product.metafields.custom.mp4_video_link
               assign webp_src = webp_meta | file_url
               assign hevc_src = hevc_meta | file_url
-              assign mp4_src  = mp4_meta | file_url
             -%}
 
-            {%- if webp_meta or hevc_meta or mp4_meta -%}
+            {%- if webp_meta or hevc_meta -%}
               <div class="media media--transparent product-card-video-wrapper">
                 <video
                   class="product-card-video motion-reduce"
@@ -73,9 +71,8 @@
                   width="{{ card_product.featured_media.width }}"
                   height="{{ card_product.featured_media.height }}"
                 >
+                  {%- if hevc_src -%}<source data-src="{{ hevc_src }}" type='video/mp4; codecs="hvc1"'>{%- endif -%}
                   {%- if webp_src -%}<source data-src="{{ webp_src }}" type="video/webm">{%- endif -%}
-                  {%- if hevc_src -%}<source data-src="{{ hevc_src }}" type="video/mp4" codecs="hvc1">{%- endif -%}
-                  {%- if mp4_src  -%}<source data-src="{{ mp4_src  }}" type="video/mp4">{%- endif -%}
                 </video>
               </div>
             {%- else -%}

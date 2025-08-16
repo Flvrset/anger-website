@@ -739,22 +739,61 @@ class SliderComponent extends HTMLElement {
     if (!this.slider || !this.nextButton) return;
 
     this.initPages();
-    const resizeObserver = new ResizeObserver((entries) => this.initPages());
+
+    const resizeObserver = new ResizeObserver(() => this.initPages());
     resizeObserver.observe(this.slider);
 
     this.slider.addEventListener('scroll', this.update.bind(this));
     this.prevButton.addEventListener('click', this.onButtonClick.bind(this));
     this.nextButton.addEventListener('click', this.onButtonClick.bind(this));
+
+    this.setupDots();
+  }
+
+  setupDots() {
+    this.sliderControlWrapper = this.querySelector('.slider-buttons');
+    // Support both dots and number links; dots have the same base class
+    this.sliderControlLinksArray = Array.from(this.querySelectorAll('.slider-counter__link'));
+    this.sliderControlLinksArray.forEach((link) => {
+      if (link.dataset.bound) return;
+      link.addEventListener('click', this.linkToSlide.bind(this));
+      link.dataset.bound = '1';
+    });
+  }
+
+  linkToSlide(event) {
+    event.preventDefault();
+    if (!this.sliderItemsToShow?.length) return;
+    const index = this.sliderControlLinksArray.indexOf(event.currentTarget);
+    if (index < 0) return;
+    const target = this.sliderItemsToShow[index];
+    this.setSlidePosition(target ? target.offsetLeft : 0);
   }
 
   initPages() {
-    this.sliderItemsToShow = Array.from(this.sliderItems).filter((element) => element.clientWidth > 0);
-    if (this.sliderItemsToShow.length < 2) return;
-    this.sliderItemOffset = this.sliderItemsToShow[1].offsetLeft - this.sliderItemsToShow[0].offsetLeft;
-    this.slidesPerPage = Math.floor(
-      (this.slider.clientWidth - this.sliderItemsToShow[0].offsetLeft) / this.sliderItemOffset
-    );
-    this.totalPages = this.sliderItemsToShow.length - this.slidesPerPage + 1;
+    // Refresh cached items in case the DOM changed
+    this.sliderItems = this.querySelectorAll('[id^="Slide-"]');
+    this.sliderItemsToShow = Array.from(this.sliderItems).filter((el) => el.clientWidth > 0);
+
+    if (this.sliderItemsToShow.length <= 1) {
+      this.sliderItemOffset = this.sliderItemsToShow[0]?.getBoundingClientRect().width || this.slider.clientWidth;
+      this.slidesPerPage = 1;
+      this.totalPages = this.sliderItemsToShow.length || 1;
+      this.currentPage = 1;
+      this.update();
+      this.setupDots();
+      return;
+    }
+
+    const first = this.sliderItemsToShow[0];
+    const second = this.sliderItemsToShow[1];
+    this.sliderItemOffset = second.offsetLeft - first.offsetLeft;
+    if (this.sliderItemOffset <= 0) this.sliderItemOffset = first.getBoundingClientRect().width;
+
+    this.slidesPerPage = Math.max(1, Math.floor((this.slider.clientWidth - first.offsetLeft) / this.sliderItemOffset));
+    this.totalPages = this.sliderItemsToShow.length;
+
+    this.setupDots();
     this.update();
   }
 
@@ -764,8 +803,6 @@ class SliderComponent extends HTMLElement {
   }
 
   update() {
-    // Temporarily prevents unneeded updates resulting from variant changes
-    // This should be refactored as part of https://github.com/Shopify/dawn/issues/2057
     if (!this.slider || !this.nextButton) return;
 
     const previousPage = this.currentPage;
@@ -774,6 +811,16 @@ class SliderComponent extends HTMLElement {
     if (this.currentPageElement && this.pageTotalElement) {
       this.currentPageElement.textContent = this.currentPage;
       this.pageTotalElement.textContent = this.totalPages;
+    }
+
+    // Sync active dot
+    if (this.sliderControlLinksArray?.length) {
+      this.sliderControlLinksArray.forEach((link, i) => {
+        const active = i === this.currentPage - 1;
+        link.classList.toggle('slider-counter__link--active', active);
+        if (active) link.setAttribute('aria-current', 'true');
+        else link.removeAttribute('aria-current');
+      });
     }
 
     if (this.currentPage != previousPage) {
@@ -818,9 +865,7 @@ class SliderComponent extends HTMLElement {
   }
 
   setSlidePosition(position) {
-    this.slider.scrollTo({
-      left: position,
-    });
+    this.slider.scrollTo({ left: position });
   }
 }
 
@@ -1044,17 +1089,6 @@ class SlideshowComponent extends SliderComponent {
       currentSlide.classList.remove(`${animationClassOut}-${direction}`);
       nextSlide.classList.remove(`${animationClassIn}-${direction}`);
     }, this.announcerBarAnimationDelay * 2);
-  }
-
-  linkToSlide(event) {
-    event.preventDefault();
-    const slideScrollPosition =
-      this.slider.scrollLeft +
-      this.sliderFirstItemNode.clientWidth *
-        (this.sliderControlLinksArray.indexOf(event.currentTarget) + 1 - this.currentPage);
-    this.slider.scrollTo({
-      left: slideScrollPosition,
-    });
   }
 }
 

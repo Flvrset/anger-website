@@ -389,7 +389,6 @@ a.product__text {
   .product__media-list {
     margin-left: -2.5rem;
     margin-bottom: 3rem;
-    width: calc(100% + 4rem);
   }
 
   .product__media-wrapper slider-component:not(.thumbnail-slider--no-slide) {
@@ -987,10 +986,6 @@ a.product__text {
     scroll-padding-left: 0.5rem;
   }
 
-  .product__media-wrapper .slider-mobile-gutter .slider-button {
-    display: none;
-  }
-
   .thumbnail-list.slider--tablet-up .thumbnail-list__item.slider__slide {
     width: calc(25% - 0.8rem);
   }
@@ -1491,4 +1486,77 @@ a.product__text {
   .recipient-form > input[type='checkbox']:checked + label .icon-checkmark {
     border: none;
   }
+}
+
+/* Full-width slides in the main product gallery */
+.product__media-list.slider {
+  grid-auto-columns: 100%;
+  column-gap: 0; /* no peek between slides */
+}
+
+.product__media-list .product__media-item.slider__slide {
+  width: 100%;
+  min-width: 100%;
+}
+
+/* Neutralize peek padding applied by grid--peek on the main gallery */
+.product__media-list.grid--peek {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* Overlay controls: minimal arrows and dots */
+media-gallery slider-component.slider-mobile-gutter { position: relative; }
+
+media-gallery .slider-mobile-gutter .slider-buttons {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+media-gallery .slider-mobile-gutter .slider-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: auto;
+  background: none;
+  border: 0;
+  padding: 0.25rem;
+  color: #000; /* caret uses currentColor */
+}
+
+media-gallery .slider-mobile-gutter .slider-button .icon {
+  width: 30px;
+  height: 30px;
+}
+
+media-gallery .slider-mobile-gutter .slider-button--prev { left: 0.5rem; }
+media-gallery .slider-mobile-gutter .slider-button--next { right: 0.5rem; }
+
+media-gallery .slider-mobile-gutter .slider-counter {
+  position: absolute;
+  left: 50%;
+  bottom: 0.5rem;
+  transform: translateX(-50%);
+  background: none;
+  padding: 0;
+  pointer-events: auto;
+}
+
+media-gallery .slider-mobile-gutter .slider-counter--dots {
+  display: flex;
+  gap: 0.4rem;
+}
+
+media-gallery .slider-mobile-gutter .slider-counter__link--dots .dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.5);
+  border: 0;
+}
+
+media-gallery .slider-mobile-gutter .slider-counter__link--active .dot {
+  background: #000;
 }

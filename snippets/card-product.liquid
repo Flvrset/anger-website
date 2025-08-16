@@ -59,45 +59,17 @@
       >
         {%- if card_product.featured_media -%}
           <div class="card__media{% if image_shape and image_shape != 'default' %} shape--{{ image_shape }}{% endif %}">
-            {%- comment -%}
-              Simplified multi‑format video logic:
-              - Scan product videos once, pick first video containing each format:
-                * webm (video/webm)
-                * hevc mp4 (mp4 whose URL has hevc/hvc1)
-                * plain mp4 (mp4 without hevc markers)
-              - Output sources in order: webm -> hevc -> mp4.
-              - Fallback: if nothing detected, dump sources of first video.
-            {%- endcomment -%}
-            {%- assign product_videos = card_product.media | where: 'media_type', 'video' -%}
-            {%- if product_videos.size > 0 -%}
-              {%- assign poster_video = product_videos.first -%}
+            {%- comment -%}Use custom video links if provided: custom.webp_video_link, custom.hevc_video_link, custom.mp4_video_link{%- endcomment -%}
+            {%- liquid
+              assign webp_meta = card_product.metafields.custom.webp_video_link
+              assign hevc_meta = card_product.metafields.custom.hevc_video_link
+              assign mp4_meta  = card_product.metafields.custom.mp4_video_link
+              assign webp_src = webp_meta | file_url
+              assign hevc_src = hevc_meta | file_url
+              assign mp4_src  = mp4_meta | file_url
+            -%}
 
-              {%- assign selected_webm = '' -%}
-              {%- assign selected_hevc = '' -%}
-              {%- assign selected_mp4 = '' -%}
-
-              {%- for v in product_videos -%}
-                {%- if selected_webm and selected_hevc and selected_mp4 -%}{% break %}{%- endif -%}
-                {%- assign has_webm = false -%}
-                {%- assign has_hevc = false -%}
-                {%- assign has_plain_mp4 = false -%}
-                {%- for s in v.sources -%}
-                  {%- assign url_lc = s.url | downcase -%}
-                  {%- if s.mime_type == 'video/webm' -%}
-                    {%- assign has_webm = true -%}
-                  {%- elsif s.mime_type == 'video/mp4' -%}
-                    {%- if url_lc contains 'hevc' or url_lc contains 'hvc1' -%}
-                      {%- assign has_hevc = true -%}
-                    {%- else -%}
-                      {%- assign has_plain_mp4 = true -%}
-                    {%- endif -%}
-                  {%- endif -%}
-                {%- endfor -%}
-                {%- if selected_webm == '' and has_webm -%}{%- assign selected_webm = v.id -%}{%- endif -%}
-                {%- if selected_hevc == '' and has_hevc -%}{%- assign selected_hevc = v.id -%}{%- endif -%}
-                {%- if selected_mp4 == '' and has_plain_mp4 -%}{%- assign selected_mp4 = v.id -%}{%- endif -%}
-              {%- endfor -%}
-
+            {%- if webp_meta or hevc_meta or mp4_meta -%}
               <div class="media media--transparent product-card-video-wrapper">
                 <video
                   class="product-card-video motion-reduce"
@@ -105,68 +77,17 @@
                   loop
                   playsinline
                   preload="metadata"
-                  poster="{{ poster_video.preview_image | image_url: width: 533 }}"
                   data-autoplay-inview
-                  width="{{ poster_video.preview_image.width }}"
-                  height="{{ poster_video.preview_image.height }}"
+                  width="{{ card_product.featured_media.width }}"
+                  height="{{ card_product.featured_media.height }}"
                 >
-                  {%- comment -%}Emit sources for a chosen video id & filter appropriate format (no parentheses in conditions){%- endcomment -%}
-                  {%- if selected_webm != '' -%}
-                    {%- for v in product_videos -%}
-                      {%- if v.id == selected_webm -%}
-                        {%- for s in v.sources -%}
-                          {%- if s.mime_type == 'video/webm' -%}
-                            <source data-src="{{ s.url }}" type="{{ s.mime_type }}">
-                          {%- endif -%}
-                        {%- endfor -%}
-                      {%- endif -%}
-                    {%- endfor -%}
-                  {%- endif -%}
-
-                  {%- if selected_hevc != '' -%}
-                    {%- for v in product_videos -%}
-                      {%- if v.id == selected_hevc -%}
-                        {%- for s in v.sources -%}
-                          {%- assign u = s.url | downcase -%}
-                          {%- assign is_hevc = false -%}
-                          {%- if u contains 'hevc' or u contains 'hvc1' -%}
-                            {%- assign is_hevc = true -%}
-                          {%- endif -%}
-                          {%- if s.mime_type == 'video/mp4' and is_hevc -%}
-                            <source data-src="{{ s.url }}" type="{{ s.mime_type }}">
-                          {%- endif -%}
-                        {%- endfor -%}
-                      {%- endif -%}
-                    {%- endfor -%}
-                  {%- endif -%}
-
-                  {%- if selected_mp4 != '' -%}
-                    {%- for v in product_videos -%}
-                      {%- if v.id == selected_mp4 -%}
-                        {%- for s in v.sources -%}
-                          {%- assign u = s.url | downcase -%}
-                          {%- assign is_hevc = false -%}
-                          {%- if u contains 'hevc' or u contains 'hvc1' -%}
-                            {%- assign is_hevc = true -%}
-                          {%- endif -%}
-                          {%- if s.mime_type == 'video/mp4' and is_hevc == false -%}
-                            <source data-src="{{ s.url }}" type="{{ s.mime_type }}">
-                          {%- endif -%}
-                        {%- endfor -%}
-                      {%- endif -%}
-                    {%- endfor -%}
-                  {%- endif -%}
-
-                  {%- if selected_webm == '' and selected_hevc == '' and selected_mp4 == '' -%}
-                    {%- comment -%}No classification: dump all sources of first video{%- endcomment -%}
-                    {%- for s in poster_video.sources -%}
-                      <source data-src="{{ s.url }}" type="{{ s.mime_type }}">
-                    {%- endfor -%}
-                  {%- endif -%}
+                  {%- if webp_src -%}<source data-src="{{ webp_src }}" type="video/webm">{%- endif -%}
+                  {%- if hevc_src -%}<source data-src="{{ hevc_src }}" type="video/mp4" codecs="hvc1">{%- endif -%}
+                  {%- if mp4_src  -%}<source data-src="{{ mp4_src  }}" type="video/mp4">{%- endif -%}
                 </video>
               </div>
             {%- else -%}
-              {%- comment -%}Fallback image (unchanged)+ you can keep your existing detailed srcset if desired{%- endcomment -%}
+              {%- comment -%}Fallback image{%- endcomment -%}
               <div class="media media--transparent">
                 {% comment %}theme-check-disable ImgLazyLoading{% endcomment %}
                 <img

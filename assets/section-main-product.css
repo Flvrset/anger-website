@@ -171,7 +171,6 @@ product-info {
 .product-form__input {
   flex: 0 0 100%;
   padding: 0;
-  margin: 0 0 1.2rem 0;
   max-width: 44rem;
   min-width: fit-content;
   border: none;
@@ -218,17 +217,11 @@ product-info {
 /* Product info */
 
 .product__info-container > * + * {
-  margin: 1.5rem 0;
+  margin: 0.5rem 0;
 }
 
 .product__info-container iframe {
   max-width: 100%;
-}
-
-.product__info-container .product-form,
-.product__info-container .product__description,
-.product__info-container .icon-with-text {
-  margin: 2.5rem 0;
 }
 
 .product__text {
@@ -247,7 +240,18 @@ a.product__text {
 
 .product__title {
   word-break: break-word;
-  margin-bottom: 1.5rem;
+  
+  h1 {
+    font-weight: 700;
+    font-size: 3rem;
+    line-height: normal;
+  }
+}
+
+.product__title-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .product__title > * {
@@ -271,10 +275,6 @@ a.product__text {
 }
 
 .product .price .badge {
-  margin-bottom: 0.5rem;
-}
-
-.product .price__container {
   margin-bottom: 0.5rem;
 }
 
@@ -361,10 +361,6 @@ a.product__text {
 
 .product-form__quantity-top .form__label {
   margin-bottom: 1.2rem;
-}
-
-.product-form__buttons {
-  max-width: 44rem;
 }
 
 .product--no-media .product__info-container > modal-opener {
@@ -1559,4 +1555,77 @@ media-gallery .slider-mobile-gutter .slider-counter__link--dots .dot {
 
 media-gallery .slider-mobile-gutter .slider-counter__link--active .dot {
   background: #000;
+}
+
+.product-variant-picker-wrapper {
+  display: flex;
+  align-items: stretch;
+  margin: 1.5rem 0;
+  
+  *::after {
+    box-shadow: unset !important;
+    border: none !important;
+  }
+
+  > variant-selects {
+    flex: 1;
+
+    .product-form__input {
+      max-width: none;
+    }
+
+    .select__select {
+      border: 1px solid black;
+      margin: 0;
+      &:focus {
+        box-shadow: unset !important;
+      }
+    }
+  }
+
+  > button {
+    background-color: #e3e3e3;
+    letter-spacing: 0.09rem;
+    padding: 0 1rem;
+    display: block;
+    font-weight: 500;
+    border: 1px solid black;
+    border-left: none;
+    cursor: pointer;
+    text-wrap: nowrap;
+    flex: 0;
+  }
+}
+
+.size-chart__popover {
+  position: fixed;
+  z-index: 1000;
+  background: #fff;
+  color: #000;
+  border: 1px solid rgba(0,0,0,.1);
+  box-shadow: 0 8px 24px rgba(0,0,0,.12);
+  border-radius: 6px;
+  padding: 12px;
+}
+
+.size-chart__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1.2rem;
+}
+.size-chart__table th,
+.size-chart__table td {
+  padding: 6px 8px;
+  border-bottom: 1px solid rgba(0,0,0,.06);
+  text-wrap: nowrap;
+}
+.size-chart__table thead th { font-weight: 600; }
+
+.size-chart__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: transparent;
+  border: 0;
+  padding: 0;
 }

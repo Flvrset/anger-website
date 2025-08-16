@@ -97,48 +97,22 @@
                   {{- block.settings.text -}}
                 </p>
               {%- when 'title' -%}
-                <div class="product__title" {{ block.shopify_attributes }}>
-                  <h1>{{ product.title | escape }}</h1>
-                  <a href="{{ product.url }}" class="product__title">
-                    <h2 class="h1">
-                      {{ product.title | escape }}
-                    </h2>
-                  </a>
-                </div>
-              {%- when 'price' -%}
-                <div id="price-{{ section.id }}" role="status" {{ block.shopify_attributes }}>
-                  {%- render 'price',
-                    product: product,
-                    use_variant: true,
-                    show_badges: true,
-                    price_class: 'price--large'
-                  -%}
-                </div>
-                {%- if product.quantity_price_breaks_configured? -%}
-                  <div class="volume-pricing-note" id="Volume-Note-{{ section.id }}">
-                    <span>{{ 'products.product.volume_pricing.note' | t }}</span>
+                <div class="product__title-wrapper">
+                  <div class="product__title" {{ block.shopify_attributes }}>
+                    <h1>{{ product.title | escape }}</h1>
+                    <a href="{{ product.url }}" class="product__title">
+                      <h2 class="h1">
+                        {{ product.title | escape }}
+                      </h2>
+                    </a>
                   </div>
-                {%- endif -%}
-                {%- if cart.taxes_included or cart.duties_included or shop.shipping_policy.body != blank -%}
-                  <div class="product__tax caption rte">
-                    {%- if cart.duties_included and cart.taxes_included -%}
-                      {{ 'products.product.duties_and_taxes_included' | t }}
-                    {%- elsif cart.taxes_included -%}
-                      {{ 'products.product.taxes_included' | t }}
-                    {%- elsif cart.duties_included -%}
-                      {{ 'products.product.duties_included' | t }}
-                    {%- endif -%}
-                    {%- if shop.shipping_policy.body != blank -%}
-                      {{ 'products.product.shipping_policy_html' | t: link: shop.shipping_policy.url }}
-                    {%- endif -%}
+                  <div id="price-{{ section.id }}" role="status" {{ block.shopify_attributes }}>
+                    {%- render 'price',
+                      product: product,
+                      use_variant: true,
+                      show_badges: true,
+                    -%}
                   </div>
-                {%- endif -%}
-                <div {{ block.shopify_attributes }}>
-                  {%- assign product_form_installment_id = 'product-form-installment-' | append: section.id -%}
-                  {%- form 'product', product, id: product_form_installment_id, class: 'installment caption-large' -%}
-                    <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
-                    {{ form | payment_terms }}
-                  {%- endform -%}
                 </div>
               {%- when 'inventory' -%}
                 <p
@@ -476,7 +450,103 @@
                 %}
 
               {%- when 'variant_picker' -%}
-                {% render 'product-variant-picker', product: product, block: block, product_form_id: product_form_id %}
+                <div class="product-variant-picker-wrapper">
+                  {% render 'product-variant-picker', product: product, block: block, product_form_id: product_form_id %}
+                  <button 
+                    type="button"
+                    class="size-chart__toggle select"
+                    aria-expanded="false"
+                    aria-controls="SizeChart-{{ section.id }}">
+                    Size chart
+                  </button>
+                  
+                  <div id="SizeChart-{{ section.id }}" class="size-chart__popover" hidden>
+                    <table class="size-chart__table">
+                      <thead>
+                        <tr>
+                          <th></th>
+                          <th>XS</th>
+                          <th>S</th>
+                          <th>M</th>
+                          <th>L</th>
+                          <th>XL</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <th scope="row">Length [cm]</th>
+                          <td>57</td>
+                          <td>88</td>
+                          <td>92</td>
+                          <td>96</td>
+                          <td>100</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Pit to pit [cm]</th>
+                          <td>57</td>
+                          <td>74</td>
+                          <td>78</td>
+                          <td>82</td>
+                          <td>86</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div> 
+
+                <script>
+                  (() => {
+                    const btn = document.querySelector('.section-{{ section.id }}-padding .size-chart__toggle');
+                    const pop = document.getElementById('SizeChart-{{ section.id }}');
+                    if (!btn || !pop) return;
+
+                    // One backdrop per section
+                    let backdrop = document.getElementById('SizeChartBackdrop-{{ section.id }}');
+                    if (!backdrop) {
+                      backdrop = document.createElement('button');
+                      backdrop.type = 'button';
+                      backdrop.id = 'SizeChartBackdrop-{{ section.id }}';
+                      backdrop.className = 'size-chart__backdrop';
+                      backdrop.hidden = true;
+                      document.body.appendChild(backdrop);
+                    }
+
+                    function position() {
+                      const r = btn.getBoundingClientRect();
+                      // Position below the button (fixed, relative to viewport)
+                      pop.style.top = (r.bottom + 8) + 'px';
+                      // Keep within viewport
+                      const maxLeft = window.innerWidth - pop.offsetWidth - 12;
+                      pop.style.left = Math.min(r.left, Math.max(12, maxLeft)) + 'px';
+                    }
+
+                    function open() {
+                      pop.hidden = false;
+                      btn.setAttribute('aria-expanded', 'true');
+                      backdrop.hidden = false;
+                      position();
+                    }
+
+                    function close() {
+                      pop.hidden = true;
+                      btn.setAttribute('aria-expanded', 'false');
+                      backdrop.hidden = true;
+                    }
+
+                    btn.addEventListener('click', (e) => {
+                      e.preventDefault();
+                      pop.hidden ? open() : close();
+                    });
+
+                    // Close on any click (inside table or outside on backdrop)
+                    backdrop.addEventListener('click', close);
+                    pop.addEventListener('click', close);
+
+                    window.addEventListener('resize', () => { if (!pop.hidden) position(); });
+                    window.addEventListener('scroll', () => { if (!pop.hidden) position(); }, { passive: true });
+                  })();
+                </script>
+
               {%- when 'buy_buttons' -%}
                 {%- render 'buy-buttons',
                   block: block,

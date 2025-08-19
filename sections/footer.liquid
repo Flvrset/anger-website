@@ -320,7 +320,7 @@
     </div>
     <div class="footer__content-links">
       <a href="{{ routes.root_url }}pages/contact" style="text-align: left; flex: 1;">Contact</a>
-      <a href="{% if shop.privacy_policy != blank %}{{ shop.privacy_policy.url }}{% else %}{{ routes.root_url }}policies/privacy-policy{% endif %}">Privacy Policy</a>
+      <a href="{% if shop.privacy_policy != blank %}{{ shop.privacy_policy.url }}{% else %}{{ routes.root_url }}policies/privacy-policy{% endif %}">Terms & Privacy</a>
       <a href="{{ routes.root_url }}pages/faq" style="text-align: right; flex: 1;">FAQ</a>
     </div>
     <div class="footer__content-bottom-wrapper page-width{% if section.settings.enable_country_selector == false and section.settings.enable_language_selector == false %} footer__content-bottom-wrapper--center{% endif %}">

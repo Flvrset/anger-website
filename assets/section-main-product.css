@@ -1539,8 +1539,8 @@ media-gallery .slider-mobile-gutter .slider-button .icon {
   height: 30px;
 }
 
-media-gallery .slider-mobile-gutter .slider-button--prev { left: 0.5rem; }
-media-gallery .slider-mobile-gutter .slider-button--next { right: 0.5rem; }
+media-gallery .slider-mobile-gutter .slider-button--prev { left: 3.5rem; }
+media-gallery .slider-mobile-gutter .slider-button--next { right: 3.5rem; }
 
 media-gallery .slider-mobile-gutter .slider-counter {
   position: absolute;

@@ -561,7 +561,7 @@ hr {
 .card__type {
   text-align: center;
   font-weight: 500;
-  margin-top: -5px;
+  margin-top: -3px;
   font-size: 1.2rem;
 }
 
@@ -3626,6 +3626,5 @@ a:hover {
 
 .product-card-video-wrapper {
   position: relative;
-  width: 300px;
-  height: 600px;
+  height: 60vh;
 }

@@ -30,7 +30,17 @@
 {%- endunless -%}
 {%- if card_product and card_product != empty -%}
   {%- liquid
-    assign ratio = 1.99
+    assign ratio = 1
+    if card_product.metafields.custom.webp_video_link
+      assign ratio = 1.99
+    elsif card_product.featured_media and media_aspect_ratio == 'portrait'
+      assign ratio = 0.8
+    elsif card_product.featured_media and media_aspect_ratio == 'adapt'
+      assign ratio = card_product.featured_media.aspect_ratio
+    endif
+    if ratio == 0 or ratio == null
+      assign ratio = 1
+    endif
   -%}
   <div class="card-wrapper product-card-wrapper underline-links-hover">
     <div
@@ -76,19 +86,33 @@
                 </video>
               </div>
             {%- else -%}
-              {%- comment -%}Fallback image{%- endcomment -%}
-              <div class="media media--transparent">
+              {%- comment -%}Fallback image (adds secondary image on hover if available){%- endcomment -%}
+              <div class="media media--transparent {% if card_product.media.size > 1 %}media--hover-effect{% endif %}">
                 {% comment %}theme-check-disable ImgLazyLoading{% endcomment %}
                 <img
                   src="{{ card_product.featured_media | image_url: width: 533 }}"
                   alt="{{ card_product.featured_media.alt | escape }}"
-                  class="motion-reduce"
+                  class="motion-reduce primary-image"
                   {% unless lazy_load == false %}
                     loading="lazy"
                   {% endunless %}
                   width="{{ card_product.featured_media.width }}"
                   height="{{ card_product.featured_media.height }}"
                 >
+                {%- if card_product.media.size > 1 -%}
+                  {%- assign second_media = card_product.media[1] -%}
+                  <img
+                    src="{{ second_media | image_url: width: 533 }}"
+                    alt="{{ second_media.alt | default: card_product.title | escape }}"
+                    class="motion-reduce secondary-image"
+                    {% unless lazy_load == false %}
+                      loading="lazy"
+                    {% endunless %}
+                    width="{{ second_media.width }}"
+                    height="{{ second_media.height }}"
+                    aria-hidden="true"
+                  >
+                {%- endif -%}
                 {% comment %}theme-check-enable ImgLazyLoading{% endcomment %}
               </div>
             {%- endif -%}

@@ -565,6 +565,28 @@ hr {
   font-size: 1.2rem;
 }
 
+.media--hover-effect .primary-image,
+.media--hover-effect .secondary-image {
+  transition: opacity 0.1s ease;
+}
+
+.media--hover-effect .secondary-image {
+  opacity: 0;
+}
+
+.card:hover .media--hover-effect .secondary-image {
+  opacity: 1;
+}
+
+.card:hover .media--hover-effect .primary-image {
+  opacity: 0;
+}
+
+.media--hover-effect .primary-image,
+.media--hover-effect .secondary-image {
+  will-change: opacity;
+}
+
 .placeholder {
   background-color: rgba(var(--color-foreground), 0.04);
   color: rgba(var(--color-foreground), 0.55);

@@ -305,10 +305,16 @@
     font-size: 1.3rem;
     line-height: normal;
   }
+  .price {
+    text-wrap: nowrap;
+  }
 
   @media screen and (max-width: 990px) {
-    padding-left: 2rem;
-    padding-right: 2rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    .card-link-title, .price__regular > .price-item--regular, .price {
+      font-size: 1rem;
+    }
   }
 }
 

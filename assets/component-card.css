@@ -314,6 +314,7 @@
     padding-right: 1rem;
     .card-link-title, .price__regular > .price-item--regular, .price {
       font-size: 1rem;
+      text-align: left;
     }
   }
 }

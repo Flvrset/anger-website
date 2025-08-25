@@ -107,10 +107,7 @@
                     </a>
                   </div>
                   <div id="price-{{ section.id }}" role="status" {{ block.shopify_attributes }}>
-                    {%- render 'price',
-                      product: product,
-                      use_variant: true,
-                    -%}
+                    {%- render 'price', product: product, use_variant: true -%}
                   </div>
                 </div>
               {%- when 'inventory' -%}
@@ -449,103 +446,117 @@
                 %}
 
               {%- when 'variant_picker' -%}
-                <div class="product-variant-picker-wrapper">
-                  {% render 'product-variant-picker', product: product, block: block, product_form_id: product_form_id %}
-                  <button 
-                    type="button"
-                    class="size-chart__toggle select"
-                    aria-expanded="false"
-                    aria-controls="SizeChart-{{ section.id }}">
-                    Size chart
-                  </button>
-                  
-                  <div id="SizeChart-{{ section.id }}" class="size-chart__popover" hidden>
-                    <table class="size-chart__table">
-                      <thead>
-                        <tr>
-                          <th></th>
-                          <th>XS</th>
-                          <th>S</th>
-                          <th>M</th>
-                          <th>L</th>
-                          <th>XL</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <th scope="row">Length [cm]</th>
-                          <td>57</td>
-                          <td>88</td>
-                          <td>92</td>
-                          <td>96</td>
-                          <td>100</td>
-                        </tr>
-                        <tr>
-                          <th scope="row">Pit to pit [cm]</th>
-                          <td>57</td>
-                          <td>74</td>
-                          <td>78</td>
-                          <td>82</td>
-                          <td>86</td>
-                        </tr>
-                      </tbody>
-                    </table>
+                {% unless product.has_only_default_variant %}
+                  <div class="product-variant-picker-wrapper">
+                    {% render 'product-variant-picker',
+                      product: product,
+                      block: block,
+                      product_form_id: product_form_id
+                    %}
+                    <button
+                      type="button"
+                      class="size-chart__toggle select"
+                      aria-expanded="false"
+                      aria-controls="SizeChart-{{ section.id }}"
+                    >
+                      Size chart
+                    </button>
+
+                    <div id="SizeChart-{{ section.id }}" class="size-chart__popover" hidden>
+                      <table class="size-chart__table">
+                        <thead>
+                          <tr>
+                            <th></th>
+                            <th>XS</th>
+                            <th>S</th>
+                            <th>M</th>
+                            <th>L</th>
+                            <th>XL</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <th scope="row">Length [cm]</th>
+                            <td>57</td>
+                            <td>88</td>
+                            <td>92</td>
+                            <td>96</td>
+                            <td>100</td>
+                          </tr>
+                          <tr>
+                            <th scope="row">Pit to pit [cm]</th>
+                            <td>57</td>
+                            <td>74</td>
+                            <td>78</td>
+                            <td>82</td>
+                            <td>86</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
-                </div> 
 
-                <script>
-                  (() => {
-                    const btn = document.querySelector('.section-{{ section.id }}-padding .size-chart__toggle');
-                    const pop = document.getElementById('SizeChart-{{ section.id }}');
-                    if (!btn || !pop) return;
+                  <script>
+                    (() => {
+                      const btn = document.querySelector('.section-{{ section.id }}-padding .size-chart__toggle');
+                      const pop = document.getElementById('SizeChart-{{ section.id }}');
+                      if (!btn || !pop) return;
 
-                    // One backdrop per section
-                    let backdrop = document.getElementById('SizeChartBackdrop-{{ section.id }}');
-                    if (!backdrop) {
-                      backdrop = document.createElement('button');
-                      backdrop.type = 'button';
-                      backdrop.id = 'SizeChartBackdrop-{{ section.id }}';
-                      backdrop.className = 'size-chart__backdrop';
-                      backdrop.hidden = true;
-                      document.body.appendChild(backdrop);
-                    }
+                      // One backdrop per section
+                      let backdrop = document.getElementById('SizeChartBackdrop-{{ section.id }}');
+                      if (!backdrop) {
+                        backdrop = document.createElement('button');
+                        backdrop.type = 'button';
+                        backdrop.id = 'SizeChartBackdrop-{{ section.id }}';
+                        backdrop.className = 'size-chart__backdrop';
+                        backdrop.hidden = true;
+                        document.body.appendChild(backdrop);
+                      }
 
-                    function position() {
-                      const r = btn.getBoundingClientRect();
-                      // Position below the button (fixed, relative to viewport)
-                      pop.style.top = (r.bottom + 8) + 'px';
-                      // Keep within viewport
-                      const maxLeft = window.innerWidth - pop.offsetWidth - 12;
-                      pop.style.left = Math.min(r.left, Math.max(12, maxLeft)) + 'px';
-                    }
+                      function position() {
+                        const r = btn.getBoundingClientRect();
+                        // Position below the button (fixed, relative to viewport)
+                        pop.style.top = r.bottom + 8 + 'px';
+                        // Keep within viewport
+                        const maxLeft = window.innerWidth - pop.offsetWidth - 12;
+                        pop.style.left = Math.min(r.left, Math.max(12, maxLeft)) + 'px';
+                      }
 
-                    function open() {
-                      pop.hidden = false;
-                      btn.setAttribute('aria-expanded', 'true');
-                      backdrop.hidden = false;
-                      position();
-                    }
+                      function open() {
+                        pop.hidden = false;
+                        btn.setAttribute('aria-expanded', 'true');
+                        backdrop.hidden = false;
+                        position();
+                      }
 
-                    function close() {
-                      pop.hidden = true;
-                      btn.setAttribute('aria-expanded', 'false');
-                      backdrop.hidden = true;
-                    }
+                      function close() {
+                        pop.hidden = true;
+                        btn.setAttribute('aria-expanded', 'false');
+                        backdrop.hidden = true;
+                      }
 
-                    btn.addEventListener('click', (e) => {
-                      e.preventDefault();
-                      pop.hidden ? open() : close();
-                    });
+                      btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        pop.hidden ? open() : close();
+                      });
 
-                    // Close on any click (inside table or outside on backdrop)
-                    backdrop.addEventListener('click', close);
-                    pop.addEventListener('click', close);
+                      // Close on any click (inside table or outside on backdrop)
+                      backdrop.addEventListener('click', close);
+                      pop.addEventListener('click', close);
 
-                    window.addEventListener('resize', () => { if (!pop.hidden) position(); });
-                    window.addEventListener('scroll', () => { if (!pop.hidden) position(); }, { passive: true });
-                  })();
-                </script>
-
+                      window.addEventListener('resize', () => {
+                        if (!pop.hidden) position();
+                      });
+                      window.addEventListener(
+                        'scroll',
+                        () => {
+                          if (!pop.hidden) position();
+                        },
+                        { passive: true }
+                      );
+                    })();
+                  </script>
+                {% endunless %}
               {%- when 'buy_buttons' -%}
                 {%- render 'buy-buttons',
                   block: block,
